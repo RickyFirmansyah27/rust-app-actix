@@ -1,12 +1,16 @@
 [package]
-name = "axum-blog"
+name = "rust-app"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+path = "src-rs/lib.rs"
+
 [dependencies]
-axum = "0.8.1"
-handlebars = "4"
-pulldown-cmark = "0.13.0"
+axum = { version = "0.8.1", features = ["macros"] }
 serde = { version = "1.0", features = ["derive"] }
-chrono = "0.4"
+serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = { version = "0.4", features = ["serde"] }
