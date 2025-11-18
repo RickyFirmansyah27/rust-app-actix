@@ -1,14 +1,11 @@
-use axum::{
-    http::StatusCode,
-    response::{IntoResponse, Json},
-};
+use actix_web::HttpResponse;
 use crate::helpers::base_response::BaseResponse;
 
-pub async fn greeting() -> impl IntoResponse {
+pub async fn greeting() -> HttpResponse {
     let response = BaseResponse::success(
         "Welcome to Rust Service".to_string(),
         None::<serde_json::Value>,
     );
     
-    (StatusCode::OK, Json(response))
+    HttpResponse::Ok().json(response)
 }

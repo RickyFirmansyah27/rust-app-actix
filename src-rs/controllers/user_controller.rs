@@ -1,7 +1,4 @@
-use axum::{
-    http::StatusCode,
-    response::{IntoResponse, Json},
-};
+use actix_web::{HttpResponse, web::{Json, Path}};
 use serde::{Deserialize, Serialize};
 use crate::helpers::base_response::BaseResponse;
 use tracing;
@@ -17,13 +14,13 @@ pub struct UserResponse {
     pub username: String,
 }
 
-pub async fn create_user(Json(payload): Json<CreateUser>) -> impl IntoResponse {
+pub async fn create_user(payload: Json<CreateUser>) -> HttpResponse {
     tracing::debug!(?payload, "Received new user payload");
     
     // Simulate user creation with a mock ID
     let user_response = UserResponse {
         id: 1,
-        username: payload.username,
+        username: payload.username.clone(),
     };
     
     let response = BaseResponse::success(
@@ -31,12 +28,15 @@ pub async fn create_user(Json(payload): Json<CreateUser>) -> impl IntoResponse {
         Some(user_response),
     );
     
-    (StatusCode::CREATED, Json(response))
+    HttpResponse::Created().json(response)
 }
 
-pub async fn get_user() -> impl IntoResponse {
+pub async fn get_user(path: Path<(u32,)>) -> HttpResponse {
+    let user_id = path.into_inner().0;
+    tracing::debug!("Getting user with id: {}", user_id);
+    
     let user_response = UserResponse {
-        id: 1,
+        id: user_id,
         username: "john_doe".to_string(),
     };
     
@@ -45,5 +45,5 @@ pub async fn get_user() -> impl IntoResponse {
         Some(user_response),
     );
     
-    (StatusCode::OK, Json(response))
+    HttpResponse::Ok().json(response)
 }
