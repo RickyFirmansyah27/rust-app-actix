@@ -1,9 +1,13 @@
 use rust_app::routes::configure_routes;
 use rust_app::helpers::logger::init_logger;
 use actix_web::{App, HttpServer, middleware::Logger};
+use dotenvy::dotenv;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // load environment variables from .env file
+    dotenv().ok();
+
     // initialize tracing
     init_logger();
 
