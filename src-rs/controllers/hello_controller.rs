@@ -1,6 +1,8 @@
 use actix_web::HttpResponse;
 use crate::helpers::base_response::BaseResponse;
+use tracing;
 
+#[tracing::instrument]
 pub async fn hello() -> HttpResponse {
     let response = BaseResponse::success(
         "Hello from Rust Service".to_string(),

@@ -14,6 +14,7 @@ pub struct UserResponse {
     pub username: String,
 }
 
+#[tracing::instrument]
 pub async fn create_user(payload: Json<CreateUser>) -> HttpResponse {
     tracing::debug!(?payload, "Received new user payload");
     
@@ -31,6 +32,7 @@ pub async fn create_user(payload: Json<CreateUser>) -> HttpResponse {
     HttpResponse::Created().json(response)
 }
 
+#[tracing::instrument]
 pub async fn get_user(path: Path<(u32,)>) -> HttpResponse {
     let user_id = path.into_inner().0;
     tracing::debug!("Getting user with id: {}", user_id);

@@ -1,8 +1,11 @@
 use actix_web::{web, HttpResponse, Responder};
+use tracing;
 use serde_json::Value;
 use std::env;
 
 pub async fn forward_to_open_router(body: web::Json<Value>) -> impl Responder {
+    tracing::info!("Received chat completion request");
+
     let client = reqwest::Client::new();
     let open_router_url = "https://openrouter.ai/api/v1/chat/completions";
 
@@ -19,11 +22,16 @@ pub async fn forward_to_open_router(body: web::Json<Value>) -> impl Responder {
         .bearer_auth(api_key)
         .json(&body)
         .send()
-        .await;
+            .await;
 
     match res {
         Ok(response) => {
             let status = response.status();
+            tracing::info!("OpenRouter responded with status: {}", status);
+
+            if status.is_success() {
+                tracing::info!("Chat completion response forwarded successfully");
+            }
             let body_bytes = response.bytes().await;
             match body_bytes {
                 Ok(bytes) => {
