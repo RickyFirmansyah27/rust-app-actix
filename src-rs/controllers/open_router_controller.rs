@@ -29,8 +29,8 @@ pub async fn forward_to_open_router(body: web::Json<Value>) -> impl Responder {
     let res = client
         .post(API_URL)
         .bearer_auth(api_key)
-        .header("Referer", REFERER)
-        .header("Title", TITLE)
+        .header("HTTP-Referer", REFERER)
+        .header("X-Title", TITLE)
         .json(&body)
         .send()
         .await;
